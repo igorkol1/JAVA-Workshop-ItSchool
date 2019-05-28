@@ -1,7 +1,6 @@
 package DAO;
 
 import Domain.Exercise;
-import Domain.User;
 
 import java.sql.*;
 

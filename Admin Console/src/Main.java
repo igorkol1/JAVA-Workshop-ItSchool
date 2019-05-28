@@ -1,7 +1,11 @@
 import DAO.ExerciseDao;
+import DAO.SolutionDao;
 import DAO.UserGroupDao;
 import Domain.Exercise;
+import Domain.Solution;
 import Domain.UserGroup;
+
+import java.time.LocalDateTime;
 
 public class Main {
     public static void main(String[] args) {
@@ -30,16 +34,31 @@ public class Main {
 //
 //        exerciseDao.delete(id);
 
-        UserGroup userGroup = new UserGroup("Test User Group DAO");
+//        UserGroup userGroup = new UserGroup("Test User Group DAO");
+//
+//        UserGroupDao userGroupDao = new UserGroupDao();
+//
+//        userGroupDao.create(userGroup);
+//        userGroup.setName("Test User Group DAO 2");
+//        userGroupDao.update(userGroup);
+//        userGroup = userGroupDao.read(userGroup.getId());
+//        userGroupDao.delete(userGroup.getId());
 
-        UserGroupDao userGroupDao = new UserGroupDao();
+        Solution solution = new Solution(LocalDateTime.now(),LocalDateTime.now(),"Test Solution DAO",1,7);
 
-        userGroupDao.create(userGroup);
-        userGroup.setName("Test User Group DAO 2");
-        userGroupDao.update(userGroup);
-        userGroup = userGroupDao.read(userGroup.getId());
-        userGroupDao.delete(userGroup.getId());
+        SolutionDao solutionDao = new SolutionDao();
 
+        Solution createdSolution = solutionDao.create(solution);
 
+        System.out.println(createdSolution.getId());
+
+        Solution updatedSolution = solutionDao.read(createdSolution.getId());
+
+        updatedSolution.setDescription("Test Solution DAO Update");
+        updatedSolution.setUpdated(LocalDateTime.now());
+
+        solutionDao.update(createdSolution);
+
+        //solutionDao.delete(createdSolution.getId());
     }
 }

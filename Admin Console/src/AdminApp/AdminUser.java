@@ -25,6 +25,9 @@ public class AdminUser {
             case 2:
                 addNewUser();
                 break;
+            case 3:
+                updateUser();
+                break;
             case 4:
                 deleteUser();
                 break;
@@ -56,6 +59,27 @@ public class AdminUser {
         } else {
             System.out.println("Fail to save new user\n");
         }
+    }
+
+    private void updateUser() {
+        System.out.println("\nProvide user id:");
+        int userId = getInt();
+        User user = userDao.read(userId);
+        if (user != null) {
+            System.out.println("\nProvide new user data:");
+            System.out.println("Old name: " + user.getUserName() + " New name: ");
+            user.setUserName(getString());
+            //TODO Validation for email (in case of wrong email there will be no message)
+            System.out.println("Old email: " + user.getEmail() + " New email: ");
+            user.setEmail(getString());
+            System.out.println("New Password: ");
+            user.setPassword(getString());
+            userDao.update(user);
+            System.out.println("User with id " + user.getId() + " is updated");
+        } else {
+            System.out.println("There is not user with id: " + userId);
+        }
+
     }
 
     private void deleteUser() {

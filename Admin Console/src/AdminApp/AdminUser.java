@@ -5,6 +5,7 @@ import Domain.User;
 
 import java.util.List;
 
+import static Commons.ConsoleUtils.getInt;
 import static Commons.ConsoleUtils.getString;
 
 public class AdminUser {
@@ -23,6 +24,9 @@ public class AdminUser {
                 break;
             case 2:
                 addNewUser();
+                break;
+            case 4:
+                deleteUser();
                 break;
             case 5:
                 break;
@@ -54,5 +58,10 @@ public class AdminUser {
         }
     }
 
-
+    private void deleteUser() {
+        System.out.println("\nProvide user id:");
+        int userId = getInt();
+        userDao.delete(userId);
+        System.out.println("User with id " + userId + " is deleted from database");
+    }
 }

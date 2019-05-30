@@ -3,6 +3,8 @@ package DAO;
 import Domain.User;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDao extends BaseDao {
 
@@ -73,4 +75,23 @@ public class UserDao extends BaseDao {
         }
     }
 
+    public List<User> findAll() {
+        try (Connection conn = dbUtils.getConnection()) {
+            List<User> users = new ArrayList<>();
+            PreparedStatement statement = conn.prepareStatement(FIND_ALL_USERS_QUERY);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                User user = new User();
+                user.setId(resultSet.getInt("id"));
+                user.setUserName(resultSet.getString("username"));
+                user.setEmail(resultSet.getString("email"));
+                user.setPassword(resultSet.getString("password"));
+                users.add(user);
+            }
+            return users;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

@@ -53,4 +53,11 @@ public class User {
     public void setPassword(String password) {
         hashPassword(password);
     }
+
+    @Override
+    public String toString() {
+        return  "id=" + id +
+                ", userName='" + userName + '\'' +
+                ", email='" + email + '\'';
+    }
 }

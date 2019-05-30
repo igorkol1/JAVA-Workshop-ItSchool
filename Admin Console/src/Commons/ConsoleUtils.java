@@ -18,5 +18,9 @@ public class ConsoleUtils {
         Arrays.stream(options).forEach(System.out::println);
     }
 
+    public static String getString() {
+        Scanner scanner = new Scanner(System.in);
+        return scanner.nextLine();
+    }
 
 }

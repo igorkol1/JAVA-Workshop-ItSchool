@@ -8,16 +8,22 @@ public class AdminMain {
     private final String[] options = {"1. User management", "2. Exercise management", "3. Exit"};
 
     public boolean performOption(int option) {
+        int operation;
         boolean status = true;
         switch (option) {
             case 1:
                 AdminUser adminUser = new AdminUser();
                 printOptions(adminUser.getOptions());
                 System.out.println("\nType option number: ");
-                int operation = getInt();
+                operation = getInt();
                 adminUser.performOptions(operation);
                 break;
             case 2:
+                AdminExercise adminExercise = new AdminExercise();
+                printOptions(adminExercise.getOptions());
+                System.out.println("\nType option number: ");
+                operation = getInt();
+                adminExercise.performOptions(operation);
                 break;
             case 3:
                 status = false;

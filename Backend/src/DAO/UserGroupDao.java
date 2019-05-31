@@ -3,6 +3,8 @@ package DAO;
 import Domain.UserGroup;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserGroupDao extends BaseDao {
 
@@ -10,6 +12,7 @@ public class UserGroupDao extends BaseDao {
     private static final String READ_USER_GROUP_QUERY = "SELECT * FROM user_group where id = ?";
     private static final String UPDATE_USER_GROUP_QUERY = "UPDATE user_group SET name = ? where id = ?";
     private static final String DELETE_USER_GROUP_QUERY = "DELETE FROM user_group WHERE id = ?";
+    private static final String FIND_ALL_USER_GROUP_QUERY = "SELECT * FROM user_group";
 
     public UserGroup create(UserGroup userGroup) {
         try (Connection conn = dbUtils.getConnection()) {
@@ -63,6 +66,24 @@ public class UserGroupDao extends BaseDao {
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    public List<UserGroup> findAll() {
+        try (Connection conn = dbUtils.getConnection()) {
+            List<UserGroup> userGroups = new ArrayList<>();
+            PreparedStatement statement = conn.prepareStatement(FIND_ALL_USER_GROUP_QUERY);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                UserGroup userGroup = new UserGroup();
+                userGroup.setId(resultSet.getInt("id"));
+                userGroup.setName(resultSet.getString("name"));
+                userGroups.add(userGroup);
+            }
+            return userGroups;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 

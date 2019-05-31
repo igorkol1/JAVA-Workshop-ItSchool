@@ -8,6 +8,7 @@ public class User {
     private String userName;
     private String email;
     private String password;
+    private int groupId;
 
     public User() {
     }
@@ -54,10 +55,19 @@ public class User {
         hashPassword(password);
     }
 
+    public int getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(int groupId) {
+        this.groupId = groupId;
+    }
+
     @Override
     public String toString() {
-        return  "id=" + id +
+        return "id=" + id +
                 ", userName='" + userName + '\'' +
-                ", email='" + email + '\'';
+                ", email='" + email + '\'' +
+                ", group id='" + groupId + '\'';
     }
 }

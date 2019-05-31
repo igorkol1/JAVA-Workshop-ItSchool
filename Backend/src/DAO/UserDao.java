@@ -1,6 +1,7 @@
 package DAO;
 
 import Domain.User;
+import Domain.UserGroup;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -13,6 +14,10 @@ public class UserDao extends BaseDao {
     private static final String UPDATE_USER_QUERY = "UPDATE users SET username = ?, email = ?, password = ? where id = ?";
     private static final String DELETE_USER_QUERY = "DELETE FROM users WHERE id = ?";
     private static final String FIND_ALL_USERS_QUERY = "SELECT * FROM users";
+    private static final String FIND_ALL_USERS_WITH_EMPTY_GROUP_QUERY = "SELECT * FROM users WHERE group_id IS NULL";
+    private static final String FIND_ALL_USERS_IN_GROUP_QUERY = "SELECT * FROM users WHERE group_id=?";
+    private static final String ASSIGN_USER_GROUP_QUERY = "UPDATE users SET group_id=? WHERE id=?";
+    private static final String RESIGN_USER_GROUP_QUERY = "UPDATE users SET group_id=NULL WHERE id=?";
 
     public User create(User user) {
         try (Connection conn = dbUtils.getConnection()) {
@@ -75,10 +80,10 @@ public class UserDao extends BaseDao {
         }
     }
 
-    public List<User> findAll() {
+    private List<User> findAll(String query) {
         try (Connection conn = dbUtils.getConnection()) {
             List<User> users = new ArrayList<>();
-            PreparedStatement statement = conn.prepareStatement(FIND_ALL_USERS_QUERY);
+            PreparedStatement statement = conn.prepareStatement(query);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 User user = new User();
@@ -86,6 +91,7 @@ public class UserDao extends BaseDao {
                 user.setUserName(resultSet.getString("username"));
                 user.setEmail(resultSet.getString("email"));
                 user.setPassword(resultSet.getString("password"));
+                user.setGroupId(resultSet.getInt("group_id"));
                 users.add(user);
             }
             return users;
@@ -94,4 +100,57 @@ public class UserDao extends BaseDao {
             return null;
         }
     }
+
+    public List<User> findAll() {
+        return findAll(FIND_ALL_USERS_QUERY);
+    }
+
+    public List<User> findAllWithEmptyGroup() {
+        return findAll(FIND_ALL_USERS_WITH_EMPTY_GROUP_QUERY);
+    }
+
+    public List<User> findAllInGroup(UserGroup userGroup) {
+        try (Connection conn = dbUtils.getConnection()) {
+            List<User> users = new ArrayList<>();
+            PreparedStatement statement = conn.prepareStatement(FIND_ALL_USERS_IN_GROUP_QUERY);
+            statement.setInt(1, userGroup.getId());
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                User user = new User();
+                user.setId(resultSet.getInt("id"));
+                user.setUserName(resultSet.getString("username"));
+                user.setEmail(resultSet.getString("email"));
+                user.setPassword(resultSet.getString("password"));
+                user.setGroupId(resultSet.getInt("group_id"));
+                users.add(user);
+            }
+            return users;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void asignGroup(User user, UserGroup userGroup) {
+        try (Connection conn = dbUtils.getConnection()) {
+            PreparedStatement statement = conn.prepareStatement(ASSIGN_USER_GROUP_QUERY);
+            statement.setInt(1, userGroup.getId());
+            statement.setInt(2, user.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void resignGroup(User user) {
+        try (Connection conn = dbUtils.getConnection()) {
+            PreparedStatement statement = conn.prepareStatement(RESIGN_USER_GROUP_QUERY);
+            statement.setInt(1, user.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

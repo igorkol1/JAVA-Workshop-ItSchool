@@ -1,6 +1,8 @@
 package AdminApp;
 
+import DAO.UserDao;
 import DAO.UserGroupDao;
+import Domain.User;
 import Domain.UserGroup;
 
 import java.util.List;
@@ -10,8 +12,9 @@ import static Commons.ConsoleUtils.getString;
 
 public class AdminGroup {
 
-    private final String[] options = {"1. Print all groups", "2. Add new group", "3. Edit existing group", "4. Delete group", "5. Exit group management"};
+    private final String[] options = {"1. Print all groups", "2. Add new group", "3. Edit existing group", "4. Show users in group", "5. Delete group", "6. Exit group management"};
     UserGroupDao userGroupDao = new UserGroupDao();
+    UserDao userDao = new UserDao();
 
     public String[] getOptions() {
         return options;
@@ -30,9 +33,12 @@ public class AdminGroup {
                 updateGroup();
                 break;
             case 4:
-                deleteGroup();
+                showUsersInGroup();
                 break;
             case 5:
+                deleteGroup();
+                break;
+            case 6:
                 break;
             default:
                 System.out.println("\nUnrecognized option. Please try again\n");
@@ -68,6 +74,18 @@ public class AdminGroup {
             userGroup.setName(getString());
             userGroupDao.update(userGroup);
             System.out.println("Group with id " + userGroup.getId() + " is updated");
+        } else {
+            System.out.println("There is not user group with id: " + groupId);
+        }
+    }
+
+    private void showUsersInGroup() {
+        System.out.println("\nProvide group id:");
+        int groupId = getInt();
+        UserGroup userGroup = userGroupDao.read(groupId);
+        if (userGroup != null) {
+            List<User> users = userDao.findAllInGroup(userGroup);
+            users.forEach(user -> System.out.println(user.toString()));
         } else {
             System.out.println("There is not user group with id: " + groupId);
         }

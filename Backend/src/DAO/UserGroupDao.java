@@ -1,5 +1,6 @@
 package DAO;
 
+import Domain.User;
 import Domain.UserGroup;
 
 import java.sql.*;
@@ -60,6 +61,7 @@ public class UserGroupDao extends BaseDao {
     }
 
     public void delete(int userGroupId) {
+        //TODO Clean grup relation in user first
         try (Connection conn = dbUtils.getConnection()) {
             PreparedStatement statement = conn.prepareStatement(DELETE_USER_GROUP_QUERY);
             statement.setInt(1, userGroupId);

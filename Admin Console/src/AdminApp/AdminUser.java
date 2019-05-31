@@ -1,7 +1,9 @@
 package AdminApp;
 
 import DAO.UserDao;
+import DAO.UserGroupDao;
 import Domain.User;
+import Domain.UserGroup;
 
 import java.util.List;
 
@@ -10,8 +12,9 @@ import static Commons.ConsoleUtils.getString;
 
 public class AdminUser {
 
-    private final String[] options = {"1. Print all users", "2. Add new user", "3. Edit existing user", "4. Delete user", "5. Exit user management"};
+    private final String[] options = {"1. Print all users", "2. Add new user", "3. Edit existing user", "4. Assign user to group", "5. Resign user from group", "6. Delete user", "7. Exit user management"};
     private UserDao userDao = new UserDao();
+    private UserGroupDao userGroupDao = new UserGroupDao();
 
     public String[] getOptions() {
         return options;
@@ -29,9 +32,15 @@ public class AdminUser {
                 updateUser();
                 break;
             case 4:
-                deleteUser();
+                assignGroup();
                 break;
             case 5:
+                resignGroup();
+                break;
+            case 6:
+                deleteUser();
+                break;
+            case 7:
                 break;
             default:
                 System.out.println("\nUnrecognized option. Please try again\n");
@@ -82,10 +91,47 @@ public class AdminUser {
 
     }
 
+    private void assignGroup() {
+        showUnassignedUsers();
+        System.out.println("\nProvide user id:");
+        int userId = getInt();
+        User user = userDao.read(userId);
+        if (user != null) {
+            System.out.println("\nProvide group id:");
+            int groupId = getInt();
+            UserGroup userGroup = userGroupDao.read(groupId);
+            if (userGroup != null) {
+                userDao.asignGroup(user, userGroup);
+                System.out.println("User with id " + user.getId() + " is assign to group with id " + userGroup.getId());
+            }
+        } else {
+            System.out.println("There is not user with id: " + userId);
+        }
+    }
+
+    private void resignGroup() {
+        System.out.println("\nProvide user id:");
+        int userId = getInt();
+        User user = userDao.read(userId);
+        if (user != null) {
+            userDao.resignGroup(user);
+            System.out.println("User with id " + user.getId() + " is removed from group with id " + user.getGroupId());
+        } else {
+            System.out.println("There is not user with id: " + userId);
+        }
+    }
+
+
     private void deleteUser() {
         System.out.println("\nProvide user id:");
         int userId = getInt();
         userDao.delete(userId);
         System.out.println("User with id " + userId + " is deleted from database");
+    }
+
+    private void showUnassignedUsers() {
+        System.out.println("\nUnasign users:");
+        List<User> users = userDao.findAllWithEmptyGroup();
+        users.forEach(user -> System.out.println(user.toString()));
     }
 }

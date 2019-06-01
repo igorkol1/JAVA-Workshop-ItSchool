@@ -35,8 +35,7 @@ public class SolutionDao extends BaseDao {
     }
 
     public Solution read(int solutionId) {
-        String DATE_FORMATTER = "yyyy-MM-dd HH:mm:ss";
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMATTER);
+        DateTimeFormatter formatter = getDateTimeFormatter();
         try (Connection conn = dbUtils.getConnection()) {
             PreparedStatement statement = conn.prepareStatement(READ_SOLUTION_QUERY);
             statement.setInt(1, solutionId);

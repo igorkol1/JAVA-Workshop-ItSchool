@@ -58,7 +58,7 @@ CREATE TABLE `homework` (
   KEY `exercise_id` (`exercise_id`),
   CONSTRAINT `homework_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `user_group` (`id`),
   CONSTRAINT `homework_ibfk_2` FOREIGN KEY (`exercise_id`) REFERENCES `exercise` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -67,7 +67,7 @@ CREATE TABLE `homework` (
 
 LOCK TABLES `homework` WRITE;
 /*!40000 ALTER TABLE `homework` DISABLE KEYS */;
-INSERT INTO `homework` VALUES (1,1,1,1,'2019-06-01 12:08:00'),(2,1,1,1,'2019-06-01 12:08:02'),(3,1,1,1,'2019-06-01 12:08:03'),(4,1,1,1,'2019-06-01 12:08:04'),(5,1,1,1,'2019-06-01 12:09:07');
+INSERT INTO `homework` VALUES (1,1,1,1,'2019-06-01 12:08:00'),(2,1,1,1,'2019-06-01 12:08:02'),(3,1,1,1,'2019-06-01 12:08:03'),(4,1,1,1,'2019-06-01 12:08:04'),(5,1,1,1,'2019-06-01 12:09:07'),(6,3,6,0,'2019-06-01 17:28:00'),(7,3,6,1,'2019-06-01 17:52:30');
 /*!40000 ALTER TABLE `homework` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -83,14 +83,14 @@ CREATE TABLE `solution` (
   `created` datetime DEFAULT NULL,
   `updated` datetime DEFAULT NULL,
   `description` text COLLATE utf8mb4_general_ci,
-  `excercise_id` int(11) DEFAULT NULL,
+  `homework_id` int(11) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `excercise_id` (`excercise_id`),
   KEY `user_id` (`user_id`),
-  CONSTRAINT `solution_ibfk_1` FOREIGN KEY (`excercise_id`) REFERENCES `exercise` (`id`),
+  KEY `solution_homework_id_fk` (`homework_id`),
+  CONSTRAINT `solution_homework_id_fk` FOREIGN KEY (`homework_id`) REFERENCES `homework` (`id`),
   CONSTRAINT `solution_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -99,7 +99,7 @@ CREATE TABLE `solution` (
 
 LOCK TABLES `solution` WRITE;
 /*!40000 ALTER TABLE `solution` DISABLE KEYS */;
-INSERT INTO `solution` VALUES (1,'2019-05-27 20:24:53','2019-05-27 20:24:53','Test Solution Desc.1',1,7),(2,'2019-05-27 20:24:53','2019-05-27 20:24:53','Test Solution Desc.2',2,8),(3,'2019-05-27 20:24:53','2019-05-27 20:24:53','Test Solution Desc.3',3,9),(4,'2019-05-27 20:24:53','2019-05-27 20:24:53','Test Solution Desc.4',4,10),(5,'2019-05-27 20:24:53','2019-05-27 20:24:53','Test Solution Desc.5',5,11),(6,'2019-05-28 20:07:17','2019-05-28 20:07:17','Test Solution DAO',1,7),(8,'2019-05-28 20:29:13','2019-05-28 20:29:13','Test Solution DAO Update',1,7),(9,'2019-05-28 20:36:03','2019-05-28 20:36:03','Test Solution DAO',1,7),(10,'2019-05-28 20:37:01','2019-05-28 20:37:01','Test Solution DAO',1,7),(11,'2019-05-28 20:39:12','2019-05-28 20:39:12','Test Solution DAO',1,7);
+INSERT INTO `solution` VALUES (12,'2019-06-01 18:40:09','2019-06-01 18:40:09','Test Solution Desc.1',1,7),(13,'2019-06-01 18:40:09','2019-06-01 18:40:09','Test Solution Desc.2',2,8),(14,'2019-06-01 18:40:09','2019-06-01 18:40:09','Test Solution Desc.3',3,9),(15,'2019-06-01 18:40:09','2019-06-01 18:40:09','Test Solution Desc.4',4,10),(16,'2019-06-01 18:40:10','2019-06-01 18:40:10','Test Solution Desc.5',5,11);
 /*!40000 ALTER TABLE `solution` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -152,7 +152,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (7,'testUser1','test1@test.pl','password',1),(8,'testUser2','test2@test.pl','password',1),(9,'testUser3','test3@test.pl','password',1),(10,'testUser4','test4@test.pl','password',1),(11,'testUser5','test5@test.pl','password',1);
+INSERT INTO `users` VALUES (7,'testUser1','test1@test.pl','password',1),(8,'testUser2','test2@test.pl','password',1),(9,'testUser3','test3@test.pl','password',1),(10,'testUser4','test4@test.pl','password',1),(11,'testUser5','test5@test.pl','password',NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -169,4 +169,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-06-01 12:10:08
+-- Dump completed on 2019-06-01 18:44:16

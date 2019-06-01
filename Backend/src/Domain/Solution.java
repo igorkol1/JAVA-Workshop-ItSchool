@@ -8,17 +8,17 @@ public class Solution {
     LocalDateTime created;
     LocalDateTime updated;
     String description;
-    int excercise_id;
+    int homework_id;
     int user_id;
 
     public Solution() {
     }
 
-    public Solution(LocalDateTime created, LocalDateTime updated, String description, int excercise_id, int user_id) {
+    public Solution(LocalDateTime created, LocalDateTime updated, String description, int homework_id, int user_id) {
         this.created = created;
         this.updated = updated;
         this.description = description;
-        this.excercise_id = excercise_id;
+        this.homework_id = homework_id;
         this.user_id = user_id;
     }
 
@@ -54,12 +54,12 @@ public class Solution {
         this.description = description;
     }
 
-    public int getExcercise_id() {
-        return excercise_id;
+    public int getHomework_id() {
+        return homework_id;
     }
 
-    public void setExcercise_id(int excercise_id) {
-        this.excercise_id = excercise_id;
+    public void setHomework_id(int homework_id) {
+        this.homework_id = homework_id;
     }
 
     public int getUser_id() {

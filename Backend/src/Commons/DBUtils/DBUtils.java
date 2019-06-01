@@ -7,7 +7,7 @@ import java.sql.SQLException;
 public class DBUtils {
 
     private static final String USER = "root";
-    private static final String PASSWORD = "password";
+    private static final String PASSWORD = "coderslab";
     private static final String DB_NAME = "it_school";
     private static final String DB_HOST = "jdbc:mysql://localhost:3306/";
     private static final String DB_OPTIONS = "?useSSL=false&characterEncoding=utf8&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";

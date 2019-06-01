@@ -59,4 +59,13 @@ public class Homework {
     public void setCreated(LocalDateTime created) {
         this.created = created;
     }
+
+    @Override
+    public String toString() {
+        return "id=" + id +
+                ", groupId=" + groupId +
+                ", exerciseId=" + exerciseId +
+                ", isActive=" + isActive +
+                ", created=" + created;
+    }
 }

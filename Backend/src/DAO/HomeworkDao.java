@@ -9,7 +9,7 @@ import java.util.List;
 
 public class HomeworkDao extends BaseDao {
 
-    private static final String CREATE_HOMEWORK_QUERY = "homework(group_id, exercise_id, is_active, created) VALUES (?,?,?,?);";
+    private static final String CREATE_HOMEWORK_QUERY = "insert into homework(group_id, exercise_id, is_active, created) VALUES (?,?,?,?)";
     private static final String READ_HOMEWORK_QUERY = "SELECT * FROM homework where id = ?";
     private static final String UPDATE_HOMEWORK_QUERY = "UPDATE homework SET group_id = ?, exercise_id = ?, is_active = ?, created = ? where id = ?";
     private static final String DELETE_HOMEWORK_QUERY = "DELETE FROM homework WHERE id = ?";

@@ -5,7 +5,7 @@ import static Commons.ConsoleUtils.printOptions;
 
 public class AdminMain {
 
-    private final String[] options = {"1. User management", "2. Exercise management", "3. Groups management", "4. Exit"};
+    private final String[] options = {"1. User management", "2. Exercise management", "3. Groups management", "4. Homework", "5. Exit"};
 
     public boolean performOption(int option) {
         int operation;
@@ -33,6 +33,13 @@ public class AdminMain {
                 adminGroup.performOptions(operation);
                 break;
             case 4:
+                AdminHomework adminHomework = new AdminHomework();
+                printOptions(adminHomework.getOptions());
+                System.out.println("\nType option number: ");
+                operation = getInt();
+                adminHomework.performOptions(operation);
+                break;
+            case 5:
                 status = false;
                 break;
             default:

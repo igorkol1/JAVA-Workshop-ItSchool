@@ -1,30 +1,31 @@
+import Commons.Authorization;
 import DAO.UserDao;
 import Domain.User;
 
+import static Commons.ConsoleUtils.getString;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Create user");
+        User contextUser = login();
+        System.out.println("User authorize");
 
-        User user = new User("Test 1", "test1@test.pl", "password");
 
-        UserDao userDao = new UserDao();
+    }
 
-        user = userDao.create(user);
-
-        System.out.println("User id = " + user.getId());
-
-        user.setUserName("Test Update");
-        user.setEmail("testUpdate@test.pl");
-        user.setPassword("password123");
-
-        userDao.update(user);
-
-        User updatedUser = userDao.read(user.getId());
-
-        System.out.println("Updated user "+updatedUser.getUserName());
-
-//        System.out.println("Delete user with id: " + user.getId());
-//        userDao.delete(user.getId());
-
+    private static User login() {
+        Authorization authorization = new Authorization();
+        User contextUser;
+        while (true) {
+            System.out.println("Enter email: ");
+            String email = getString();
+            System.out.println("Enter password: ");
+            String password = getString();
+            contextUser = authorization.authorize(email, password);
+            if (contextUser != null) {
+                return contextUser;
+            } else {
+                System.out.println("Incorrect user or password ");
+            }
+        }
     }
 }

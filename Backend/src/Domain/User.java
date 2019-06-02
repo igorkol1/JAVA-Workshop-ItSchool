@@ -23,6 +23,10 @@ public class User {
         this.password = BCrypt.hashpw(password, BCrypt.gensalt());
     }
 
+    public boolean comparePassword(String password) {
+        return BCrypt.checkpw(password, this.password);
+    }
+
     public int getId() {
         return id;
     }

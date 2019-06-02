@@ -18,6 +18,7 @@ public class UserDao extends BaseDao {
     private static final String FIND_ALL_USERS_IN_GROUP_QUERY = "SELECT * FROM users WHERE group_id=?";
     private static final String ASSIGN_USER_GROUP_QUERY = "UPDATE users SET group_id=? WHERE id=?";
     private static final String RESIGN_USER_GROUP_QUERY = "UPDATE users SET group_id=NULL WHERE id=?";
+    private static final String FIND_USER_BY_EMAIL_QUERY = "select * from users where email=?";
 
     public User create(User user) {
         try (Connection conn = dbUtils.getConnection()) {
@@ -153,4 +154,22 @@ public class UserDao extends BaseDao {
     }
 
 
+    public User findByEmail(String email) {
+        try (Connection conn = dbUtils.getConnection()) {
+            PreparedStatement statement = conn.prepareStatement(FIND_USER_BY_EMAIL_QUERY);
+            statement.setString(1, email);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                User user = new User();
+                user.setId(resultSet.getInt("id"));
+                user.setUserName(resultSet.getString("username"));
+                user.setEmail(resultSet.getString("email"));
+                user.setPassword(resultSet.getString("password"));
+                return user;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

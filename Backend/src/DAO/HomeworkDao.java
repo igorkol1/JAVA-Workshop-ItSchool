@@ -1,6 +1,7 @@
 package DAO;
 
 import Domain.Homework;
+import Domain.User;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -14,6 +15,7 @@ public class HomeworkDao extends BaseDao {
     private static final String UPDATE_HOMEWORK_QUERY = "UPDATE homework SET group_id = ?, exercise_id = ?, is_active = ?, created = ? where id = ?";
     private static final String DELETE_HOMEWORK_QUERY = "DELETE FROM homework WHERE id = ?";
     private static final String FIND_ALL_HOMEWORKS_QUERY = "SELECT * FROM homework";
+    private static final String FIND_ALL_HOMEWORK_FOR_USER_QUERY = "select * from homework join user_group ug on homework.group_id = ug.id where ug.id = (select group_id from users where id = ?);";
 
     public Homework create(Homework homework) {
         try (Connection conn = dbUtils.getConnection()) {
@@ -101,4 +103,25 @@ public class HomeworkDao extends BaseDao {
         }
     }
 
+    public List<Homework> findAllForUser(User user) {
+        try (Connection conn = dbUtils.getConnection()) {
+            List<Homework> exercises = new ArrayList<>();
+            PreparedStatement statement = conn.prepareStatement(FIND_ALL_HOMEWORK_FOR_USER_QUERY);
+            statement.setInt(1, user.getId());
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                Homework homework = new Homework();
+                homework.setId(resultSet.getInt("id"));
+                homework.setGroupId(resultSet.getInt("group_id"));
+                homework.setExerciseId(resultSet.getInt("exercise_id"));
+                homework.setActive(resultSet.getBoolean("is_active"));
+                homework.setCreated(LocalDateTime.parse(resultSet.getString("created"), getDateTimeFormatter()));
+                exercises.add(homework);
+            }
+            return exercises;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

@@ -9,7 +9,7 @@ public class UserMain {
 
     private User contextUser;
 
-    private final String[] options = {"1. Browse homework", "2. Add solutions", "3. Edit own data", "4. Exit"};
+    private final String[] options = {"1. Browse homework", "2. Manage solutions", "3. Edit own data", "4. Exit"};
 
     public UserMain(User contextUser) {
         this.contextUser = contextUser;
@@ -28,6 +28,11 @@ public class UserMain {
                 userHomework.printUserHomework();
                 break;
             case 2:
+                UserSolutions userSolutions = new UserSolutions(contextUser);
+                printOptions(userSolutions.getOptions());
+                System.out.println("\nType option number: ");
+                operation = getInt();
+                userSolutions.performOptions(operation);
                 break;
             case 3:
                 break;

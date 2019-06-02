@@ -69,4 +69,15 @@ public class Solution {
     public void setUser_id(int user_id) {
         this.user_id = user_id;
     }
+
+    @Override
+    public String toString() {
+        return "Solution: " +
+                "id=" + id +
+                ", created=" + created +
+                ", updated=" + updated +
+                ", description='" + description + '\'' +
+                ", homework_id=" + homework_id +
+                ", user_id=" + user_id;
+    }
 }

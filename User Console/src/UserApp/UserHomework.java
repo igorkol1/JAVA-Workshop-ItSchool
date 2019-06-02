@@ -24,7 +24,7 @@ public class UserHomework {
         homeworkList.forEach(this::printHomeworkAndExercise);
     }
 
-    private void printHomeworkAndExercise(Homework homework) {
+    protected void printHomeworkAndExercise(Homework homework) {
         System.out.println("Homework: " + homework.toString());
         System.out.println("Exercise: " + exerciseDao.read(homework.getExerciseId()).toString() + "\n");
     }

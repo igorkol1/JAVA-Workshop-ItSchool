@@ -2,9 +2,11 @@ package AdminApp;
 
 import DAO.ExerciseDao;
 import DAO.HomeworkDao;
+import DAO.SolutionDao;
 import DAO.UserGroupDao;
 import Domain.Exercise;
 import Domain.Homework;
+import Domain.Solution;
 import Domain.UserGroup;
 
 import java.time.LocalDateTime;
@@ -18,6 +20,7 @@ public class AdminHomework {
     private HomeworkDao homeworkDao = new HomeworkDao();
     private UserGroupDao userGroupDao = new UserGroupDao();
     private ExerciseDao exerciseDao = new ExerciseDao();
+    private SolutionDao solutionDao = new SolutionDao();
 
     public String[] getOptions() {
         return options;
@@ -129,7 +132,15 @@ public class AdminHomework {
     }
 
     private void browseSolutions() {
-        //todo
+        System.out.println("\nProvide homework id:");
+        int homeworkId = getInt();
+        Homework homework = homeworkDao.read(homeworkId);
+        if(homework!=null){
+            List<Solution> solutionList = solutionDao.findSolutionsForHomework(homework);
+            solutionList.forEach(solution -> System.out.println(solution.toString()));
+        } else {
+            System.out.println("There is no homework with id: " + homeworkId);
+        }
     }
 
 }

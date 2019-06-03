@@ -35,6 +35,8 @@ public class UserMain {
                 userSolutions.performOptions(operation);
                 break;
             case 3:
+                UserUpdate userUpdate = new UserUpdate(contextUser);
+                userUpdate.updateUser();
                 break;
             case 4:
                 status = false;

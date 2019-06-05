@@ -42,20 +42,12 @@ public class SolutionDao extends BaseDao {
     }
 
     public Solution read(int solutionId) {
-        DateTimeFormatter formatter = getDateTimeFormatter();
         try (Connection conn = dbUtils.getConnection()) {
             PreparedStatement statement = conn.prepareStatement(READ_SOLUTION_QUERY);
             statement.setInt(1, solutionId);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                Solution solution = new Solution();
-                solution.setId(resultSet.getInt("id"));
-                solution.setCreated(LocalDateTime.parse(resultSet.getString("created"), formatter));
-                solution.setUpdated(LocalDateTime.parse(resultSet.getString("updated"), formatter));
-                solution.setDescription(resultSet.getString("description"));
-                solution.setHomework_id(resultSet.getInt("homework_id"));
-                solution.setUser_id(resultSet.getInt("user_id"));
-                return solution;
+                return mapResultSetToSolution(resultSet);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -91,43 +83,24 @@ public class SolutionDao extends BaseDao {
 
     public List<Solution> findAllForUser(User user) {
         try (Connection conn = dbUtils.getConnection()) {
-            List<Solution> solutions = new ArrayList<>();
             PreparedStatement statement = conn.prepareStatement(FIND_ALL_SOLUTIONS_FOR_USER_QUERY);
             statement.setInt(1, user.getId());
             ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                Solution solution = new Solution();
-                solution.setId(resultSet.getInt("id"));
-                solution.setCreated(LocalDateTime.parse(resultSet.getString("created"), getDateTimeFormatter()));
-                solution.setUpdated(LocalDateTime.parse(resultSet.getString("updated"), getDateTimeFormatter()));
-                solution.setDescription(resultSet.getString("description"));
-                solution.setHomework_id(resultSet.getInt("homework_id"));
-                solution.setUser_id(resultSet.getInt("user_id"));
-                solutions.add(solution);
-            }
-            return solutions;
+            return mapResultSetToSolutionList(resultSet);
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    public Solution findSolutionForHomeworkAndUser(User user,Homework homework){
-        DateTimeFormatter formatter = getDateTimeFormatter();
+    public Solution findSolutionForHomeworkAndUser(User user, Homework homework) {
         try (Connection conn = dbUtils.getConnection()) {
             PreparedStatement statement = conn.prepareStatement(FIND_SOLUTION_FOR_USER_AND_HOMEWORK_QUERY);
             statement.setInt(1, user.getId());
-            statement.setInt(2,homework.getId());
+            statement.setInt(2, homework.getId());
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                Solution solution = new Solution();
-                solution.setId(resultSet.getInt("id"));
-                solution.setCreated(LocalDateTime.parse(resultSet.getString("created"), formatter));
-                solution.setUpdated(LocalDateTime.parse(resultSet.getString("updated"), formatter));
-                solution.setDescription(resultSet.getString("description"));
-                solution.setHomework_id(resultSet.getInt("homework_id"));
-                solution.setUser_id(resultSet.getInt("user_id"));
-                return solution;
+                return mapResultSetToSolution(resultSet);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -135,26 +108,35 @@ public class SolutionDao extends BaseDao {
         return null;
     }
 
-    public List<Solution> findSolutionsForHomework(Homework homework){
+    public List<Solution> findSolutionsForHomework(Homework homework) {
         try (Connection conn = dbUtils.getConnection()) {
-            List<Solution> solutions = new ArrayList<>();
             PreparedStatement statement = conn.prepareStatement(FIND_ALL_SOLUTIONS_FOR_HOMEWORK_QUERY);
             statement.setInt(1, homework.getId());
             ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                Solution solution = new Solution();
-                solution.setId(resultSet.getInt("id"));
-                solution.setCreated(LocalDateTime.parse(resultSet.getString("created"), getDateTimeFormatter()));
-                solution.setUpdated(LocalDateTime.parse(resultSet.getString("updated"), getDateTimeFormatter()));
-                solution.setDescription(resultSet.getString("description"));
-                solution.setHomework_id(resultSet.getInt("homework_id"));
-                solution.setUser_id(resultSet.getInt("user_id"));
-                solutions.add(solution);
-            }
-            return solutions;
+            return mapResultSetToSolutionList(resultSet);
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private Solution mapResultSetToSolution(ResultSet resultSet) throws SQLException {
+        DateTimeFormatter formatter = getDateTimeFormatter();
+        Solution solution = new Solution();
+        solution.setId(resultSet.getInt("id"));
+        solution.setCreated(LocalDateTime.parse(resultSet.getString("created"), formatter));
+        solution.setUpdated(LocalDateTime.parse(resultSet.getString("updated"), formatter));
+        solution.setDescription(resultSet.getString("description"));
+        solution.setHomework_id(resultSet.getInt("homework_id"));
+        solution.setUser_id(resultSet.getInt("user_id"));
+        return solution;
+    }
+
+    private List<Solution> mapResultSetToSolutionList(ResultSet resultSet) throws SQLException {
+        List<Solution> solutionList = new ArrayList<>();
+        while (resultSet.next()) {
+            solutionList.add(mapResultSetToSolution(resultSet));
+        }
+        return solutionList;
     }
 }

@@ -45,12 +45,7 @@ public class UserDao extends BaseDao {
             statement.setInt(1, userId);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                User user = new User();
-                user.setId(resultSet.getInt("id"));
-                user.setUserName(resultSet.getString("username"));
-                user.setEmail(resultSet.getString("email"));
-                user.setPassword(resultSet.getString("password"));
-                return user;
+                return mapResultSetToUser(resultSet);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -83,19 +78,9 @@ public class UserDao extends BaseDao {
 
     private List<User> findAll(String query) {
         try (Connection conn = dbUtils.getConnection()) {
-            List<User> users = new ArrayList<>();
             PreparedStatement statement = conn.prepareStatement(query);
             ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                User user = new User();
-                user.setId(resultSet.getInt("id"));
-                user.setUserName(resultSet.getString("username"));
-                user.setEmail(resultSet.getString("email"));
-                user.setPassword(resultSet.getString("password"));
-                user.setGroupId(resultSet.getInt("group_id"));
-                users.add(user);
-            }
-            return users;
+            return mapResultSetToUserList(resultSet);
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
@@ -112,20 +97,10 @@ public class UserDao extends BaseDao {
 
     public List<User> findAllInGroup(UserGroup userGroup) {
         try (Connection conn = dbUtils.getConnection()) {
-            List<User> users = new ArrayList<>();
             PreparedStatement statement = conn.prepareStatement(FIND_ALL_USERS_IN_GROUP_QUERY);
             statement.setInt(1, userGroup.getId());
             ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                User user = new User();
-                user.setId(resultSet.getInt("id"));
-                user.setUserName(resultSet.getString("username"));
-                user.setEmail(resultSet.getString("email"));
-                user.setPassword(resultSet.getString("password"));
-                user.setGroupId(resultSet.getInt("group_id"));
-                users.add(user);
-            }
-            return users;
+            return mapResultSetToUserList(resultSet);
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
@@ -160,16 +135,28 @@ public class UserDao extends BaseDao {
             statement.setString(1, email);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                User user = new User();
-                user.setId(resultSet.getInt("id"));
-                user.setUserName(resultSet.getString("username"));
-                user.setEmail(resultSet.getString("email"));
-                user.setPassword(resultSet.getString("password"));
-                return user;
+                return mapResultSetToUser(resultSet);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private User mapResultSetToUser(ResultSet resultSet) throws SQLException {
+        User user = new User();
+        user.setId(resultSet.getInt("id"));
+        user.setUserName(resultSet.getString("username"));
+        user.setEmail(resultSet.getString("email"));
+        user.setPassword(resultSet.getString("password"));
+        return user;
+    }
+
+    private List<User> mapResultSetToUserList(ResultSet resultSet) throws SQLException {
+        List<User> userList = new ArrayList<>();
+        while (resultSet.next()) {
+            userList.add(mapResultSetToUser(resultSet));
+        }
+        return userList;
     }
 }

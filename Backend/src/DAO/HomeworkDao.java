@@ -44,13 +44,7 @@ public class HomeworkDao extends BaseDao {
             statement.setInt(1, homeworkId);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                Homework homework = new Homework();
-                homework.setId(resultSet.getInt("id"));
-                homework.setGroupId(resultSet.getInt("group_id"));
-                homework.setExerciseId(resultSet.getInt("exercise_id"));
-                homework.setActive(resultSet.getBoolean("is_active"));
-                homework.setCreated(LocalDateTime.parse(resultSet.getString("created"), getDateTimeFormatter()));
-                return homework;
+                return mapResultSetToHomework(resultSet);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -85,19 +79,9 @@ public class HomeworkDao extends BaseDao {
 
     public List<Homework> findAll() {
         try (Connection conn = dbUtils.getConnection()) {
-            List<Homework> exercises = new ArrayList<>();
             PreparedStatement statement = conn.prepareStatement(FIND_ALL_HOMEWORKS_QUERY);
             ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                Homework homework = new Homework();
-                homework.setId(resultSet.getInt("id"));
-                homework.setGroupId(resultSet.getInt("group_id"));
-                homework.setExerciseId(resultSet.getInt("exercise_id"));
-                homework.setActive(resultSet.getBoolean("is_active"));
-                homework.setCreated(LocalDateTime.parse(resultSet.getString("created"), getDateTimeFormatter()));
-                exercises.add(homework);
-            }
-            return exercises;
+            return mapResultSetToHomeworkList(resultSet);
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
@@ -106,20 +90,10 @@ public class HomeworkDao extends BaseDao {
 
     public List<Homework> findAllForUser(User user) {
         try (Connection conn = dbUtils.getConnection()) {
-            List<Homework> exercises = new ArrayList<>();
             PreparedStatement statement = conn.prepareStatement(FIND_ALL_HOMEWORK_FOR_USER_QUERY);
             statement.setInt(1, user.getId());
             ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                Homework homework = new Homework();
-                homework.setId(resultSet.getInt("id"));
-                homework.setGroupId(resultSet.getInt("group_id"));
-                homework.setExerciseId(resultSet.getInt("exercise_id"));
-                homework.setActive(resultSet.getBoolean("is_active"));
-                homework.setCreated(LocalDateTime.parse(resultSet.getString("created"), getDateTimeFormatter()));
-                exercises.add(homework);
-            }
-            return exercises;
+            return mapResultSetToHomeworkList(resultSet);
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
@@ -128,24 +102,32 @@ public class HomeworkDao extends BaseDao {
 
     public List<Homework> findAllUnsolvedForUser(User user) {
         try (Connection conn = dbUtils.getConnection()) {
-            List<Homework> exercises = new ArrayList<>();
             PreparedStatement statement = conn.prepareStatement(FIND_UNSOLVED_HOMEWORK_FOR_USER_QUERY);
             statement.setInt(1, user.getId());
             statement.setInt(2, user.getId());
             ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                Homework homework = new Homework();
-                homework.setId(resultSet.getInt("id"));
-                homework.setGroupId(resultSet.getInt("group_id"));
-                homework.setExerciseId(resultSet.getInt("exercise_id"));
-                homework.setActive(resultSet.getBoolean("is_active"));
-                homework.setCreated(LocalDateTime.parse(resultSet.getString("created"), getDateTimeFormatter()));
-                exercises.add(homework);
-            }
-            return exercises;
+            return mapResultSetToHomeworkList(resultSet);
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private Homework mapResultSetToHomework(ResultSet resultSet) throws SQLException {
+        Homework homework = new Homework();
+        homework.setId(resultSet.getInt("id"));
+        homework.setGroupId(resultSet.getInt("group_id"));
+        homework.setExerciseId(resultSet.getInt("exercise_id"));
+        homework.setActive(resultSet.getBoolean("is_active"));
+        homework.setCreated(LocalDateTime.parse(resultSet.getString("created"), getDateTimeFormatter()));
+        return homework;
+    }
+
+    private List<Homework> mapResultSetToHomeworkList(ResultSet resultSet) throws SQLException {
+        List<Homework> homeworkList = new ArrayList<>();
+        while (resultSet.next()) {
+            homeworkList.add(mapResultSetToHomework(resultSet));
+        }
+        return homeworkList;
     }
 }

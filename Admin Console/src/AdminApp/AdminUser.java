@@ -82,7 +82,7 @@ public class AdminUser {
             System.out.println("Old email: " + user.getEmail() + " New email: ");
             user.setEmail(getString());
             System.out.println("New Password: ");
-            user.setPassword(getString());
+            user.hashPassword(getString());
             userDao.update(user);
             System.out.println("User with id " + user.getId() + " is updated");
         } else {

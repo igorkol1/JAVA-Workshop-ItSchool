@@ -24,7 +24,7 @@ public class UserUpdate {
         String newPassword = getString();
         contextUser.setUserName(newUsername);
         contextUser.setEmail(newEmail);
-        contextUser.setPassword(newPassword);
+        contextUser.hashPassword(newPassword);
         userDao.update(contextUser);
         System.out.println("User successfully updated");
     }
